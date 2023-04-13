@@ -117,4 +117,4 @@ if (!window.dolisirh.scriptsLoaded) {
 		}
 	};
 	$(document).ready(window.dolisirh.init);
-}
+ }
