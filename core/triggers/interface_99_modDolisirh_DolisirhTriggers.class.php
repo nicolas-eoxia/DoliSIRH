@@ -291,15 +291,8 @@ class InterfaceDoliSIRHTriggers extends DolibarrTriggers
 				$actioncomm->create($user);
 				break;
 
-            case 'CERTIFICATE_CREATE' :
-                $actioncomm->code  = 'AC_' . strtoupper($object->element) . '_CREATE';
-                $actioncomm->label = $langs->trans('ObjectCreateTrigger', $langs->transnoentities(ucfirst($object->element)));
-                $actioncomm->create($user);
-                break;
-
             // MODIFY
 			case 'TIMESHEET_MODIFY' :
-            case 'CERTIFICATE_MODIFY' :
                 $actioncomm->code  = 'AC_' . strtoupper($object->element) . '_MODIFY';
                 $actioncomm->label = $langs->trans('ObjectModifyTrigger', $langs->transnoentities(ucfirst($object->element)));
                 $actioncomm->create($user);
@@ -307,15 +300,13 @@ class InterfaceDoliSIRHTriggers extends DolibarrTriggers
 
             // DELETE
 			case 'TIMESHEET_DELETE' :
-            case 'CERTIFICATE_DELETE' :
-                $actioncomm->code  = 'AC_ ' . strtoupper($object->element) . '_DELETE';
+                $actioncomm->code  = 'AC_' . strtoupper($object->element) . '_DELETE';
                 $actioncomm->label = $langs->trans('ObjectDeleteTrigger', $langs->transnoentities(ucfirst($object->element)));
                 $actioncomm->create($user);
 				break;
 
             // VALIDATE
             case 'TIMESHEET_VALIDATE' :
-            case 'CERTIFICATE_VALIDATE' :
                 $actioncomm->code  = 'AC_' . strtoupper($object->element) . '_VALIDATE';
                 $actioncomm->label = $langs->trans('ObjectValidateTrigger', $langs->transnoentities(ucfirst($object->element)));
                 $actioncomm->create($user);
@@ -323,7 +314,6 @@ class InterfaceDoliSIRHTriggers extends DolibarrTriggers
 
             // UNVALIDATE
 			case 'TIMESHEET_UNVALIDATE' :
-            case 'CERTIFICATE_UNVALIDATE' :
                 $actioncomm->code  = 'AC_' . strtoupper($object->element) . '_UNVALIDATE';
                 $actioncomm->label = $langs->trans('ObjectUnValidateTrigger', $langs->transnoentities(ucfirst($object->element)));
                 $actioncomm->create($user);
@@ -331,7 +321,6 @@ class InterfaceDoliSIRHTriggers extends DolibarrTriggers
 
             // LOCKED
             case 'TIMESHEET_LOCKED' :
-            case 'CERTIFICATE_LOCKED' :
                 $actioncomm->code  = 'AC_' . strtoupper($object->element) . '_LOCKED';
                 $actioncomm->label = $langs->trans('ObjectLockedTrigger', $langs->transnoentities(ucfirst($object->element)));
                 $actioncomm->create($user);
@@ -339,7 +328,6 @@ class InterfaceDoliSIRHTriggers extends DolibarrTriggers
 
             // ARCHIVED
             case 'TIMESHEET_ARCHIVED' :
-            case 'CERTIFICATE_ARCHIVED' :
                 $actioncomm->code  = 'AC_' . strtoupper($object->element) . '_ARCHIVED';
                 $actioncomm->label = $langs->trans('ObjectArchivedTrigger', $langs->transnoentities(ucfirst($object->element)));
                 $actioncomm->create($user);
