@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2023 EVARISK <dev@evarisk.com>
+/* Copyright (C) 2021-2023 EVARISK <technique@evarisk.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,148 +17,137 @@
  */
 
 /**
- *	\file       core/modules/dolisirh/timesheetdocument/doc_timesheetdocument_odt.modules.php
- *	\ingroup    dolisirh
- *	\brief      File of class to build ODT documents for timesheet
+ * \file    core/modules/dolisirh/dolisirhdocuments/timesheetdocument/doc_timesheetdocument_odt.modules.php
+ * \ingroup dolisirh
+ * \brief   File of class to build ODT timesheet document.
  */
 
-require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+// Load Dolibarr Libraries.
+require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/images.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/doc.lib.php';
 
+// Load DoliSIRH Libraries.
 require_once __DIR__ . '/modules_timesheetdocument.php';
 require_once __DIR__ . '/mod_timesheetdocument_standard.php';
 
 /**
- *	Class to build documents using ODF templates generator
+ * Class to build documents using ODF templates generator.
  */
 class doc_timesheetdocument_odt extends ModeleODTTimeSheetDocument
 {
-	/**
-	 * Issuer
-	 * @var Societe
-	 */
-	public $emetteur;
-
-	/**
-	 * @var array Minimum version of PHP required by module.
-	 * e.g.: PHP ≥ 5.6 = array(5, 6)
-	 */
-	public $phpmin = array(5, 6);
-
-	/**
-	 * @var string Dolibarr version of the loaded document
-	 */
-	public $version = 'dolibarr';
-
-	/**
-	 *	Constructor
-	 *
-	 *  @param		DoliDB		$db      Database handler
-	 */
-	public function __construct($db)
-	{
-		global $langs, $mysoc;
-
-		// Load translation files required by the page
-		$langs->loadLangs(array("main", "companies"));
-
-		$this->db = $db;
-		$this->name = $langs->trans('DoliSIRHTimeSheetDocumentTemplate');
-		$this->description = $langs->trans("DocumentModelOdt");
-		$this->scandir = 'DOLISIRH_TIMESHEETDOCUMENT_ADDON_ODT_PATH'; // Name of constant that is used to save list of directories to scan
-
-		// Page size for A4 format
-		$this->type = 'odt';
-		$this->page_largeur = 0;
-		$this->page_hauteur = 0;
-		$this->format = array($this->page_largeur, $this->page_hauteur);
-		$this->marge_gauche = 0;
-		$this->marge_droite = 0;
-		$this->marge_haute = 0;
-		$this->marge_basse = 0;
-
-		$this->option_logo = 1; // Display logo
-		$this->option_multilang = 1; // Available in several languages
-
-		// Get source company
-		$this->emetteur = $mysoc;
-		if (!$this->emetteur->country_code) {
-			$this->emetteur->country_code = substr($langs->defaultlang, -2); // By default, if is not defined
-		}
-	}
-
-	/**
-	 *	Return description of a module
-	 *
-	 *	@param	Translate	$langs      Lang object to use for output
-	 *	@return string       			Description
-	 */
-	public function info($langs)
-	{
-		global $conf, $langs;
-
-		// Load translation files required by the page
-		$langs->loadLangs(array("errors", "companies"));
-
-		$texte = $this->description.".<br>";
-		$texte .= '<table class="nobordernopadding centpercent">';
-
-		// List of directories area
-		$texte .= '<tr><td>';
-		$texttitle = $langs->trans("ListOfDirectories");
-		$listofdir = explode(',', preg_replace('/[\r\n]+/', ',', trim($conf->global->DOLISIRH_TIMESHEETDOCUMENT_ADDON_ODT_PATH)));
-		$listoffiles = array();
-		foreach ($listofdir as $key => $tmpdir) {
-			$tmpdir = trim($tmpdir);
-			$tmpdir = preg_replace('/DOL_DATA_ROOT/', DOL_DATA_ROOT, $tmpdir);
-			$tmpdir = preg_replace('/DOL_DOCUMENT_ROOT/', DOL_DOCUMENT_ROOT, $tmpdir);
-			if (!$tmpdir) {
-				unset($listofdir[$key]);
-				continue;
-			}
-			if (!is_dir($tmpdir)) {
-				$texttitle .= img_warning($langs->trans("ErrorDirNotFound", $tmpdir), 0);
-			} else {
-				$tmpfiles = dol_dir_list($tmpdir, 'files', 0, '\.(ods|odt)');
-				if (count($tmpfiles)) {
-					$listoffiles = array_merge($listoffiles, $tmpfiles);
-				}
-			}
-		}
-
-		// Scan directories
-		$nbofiles = count($listoffiles);
-		if (!empty($conf->global->DOLISIRH_TIMESHEETDOCUMENT_ADDON_ODT_PATH)) {
-			$texte .= $langs->trans("DoliSIRHNumberOfModelFilesFound").': <b>';
-			$texte .= count($listoffiles);
-			$texte .= '</b>';
-		}
-
-		if ($nbofiles) {
-			$texte .= '<div id="div_' . get_class($this) . '" class="hidden">';
-			foreach ($listoffiles as $file) {
-				$texte .= $file['name'] . '<br>';
-			}
-			$texte .= '</div>';
-		}
-
-		$texte .= '</td>';
-		$texte .= '</table>';
-		$texte .= '</form>';
-
-		return $texte;
-	}
-
+    /**
+     * @var array Minimum version of PHP required by module.
+     * e.g.: PHP ≥ 5.5 = array(5, 5)
+     */
+    public array $phpmin = [7, 4];
 
     /**
-     *    Set tmparray vars
+     * @var string Dolibarr version of the loaded document.
+     */
+    public string $version = 'dolibarr';
+
+    /**
+     * Constructor.
      *
-     * @param  array        $tmparray   temp array contains all document data
-     * @param  Segment      $listlines  Object to fill with data to convert in ODT Segment
+     * @param DoliDB $db Database handler.
+     */
+    public function __construct(DoliDB $db)
+    {
+        global $langs;
+
+        // Load translation files required by the page
+        $langs->loadLangs(['main', 'companies']);
+
+        $this->db          = $db;
+        $this->name        = $langs->trans('ODTDefaultTemplateName');
+        $this->description = $langs->trans('DocumentModelOdt');
+        $this->scandir     = 'DOLISIRH_TIMESHEETDOCUMENT_ADDON_PDF_ODT_PATH'; // Name of constant that is used to save list of directories to scan.
+
+        // Page size for A4 format.
+        $this->type         = 'odt';
+        $this->page_largeur = 0;
+        $this->page_hauteur = 0;
+        $this->format       = [$this->page_largeur, $this->page_hauteur];
+        $this->marge_gauche = 0;
+        $this->marge_droite = 0;
+        $this->marge_haute  = 0;
+        $this->marge_basse  = 0;
+
+        $this->option_logo      = 1; // Display logo.
+        $this->option_multilang = 1; // Available in several languages.
+    }
+
+    /**
+     * Return description of a module
+     *
+     * @param  Translate $langs Lang object to use for output.
+     * @return string           Description.
+     */
+    public function info(Translate $langs): string
+    {
+        global $conf, $langs;
+
+        // Load translation files required by the page
+        $langs->loadLangs(['errors', 'companies']);
+
+        $texte = $this->description . ' . <br>';
+        $texte .= '<form action="' . $_SERVER['PHP_SELF'] . '" method="POST">';
+        $texte .= '<input type="hidden" name="token" value="' . newToken() . '">';
+        $texte .= '<input type="hidden" name="action" value="setModuleOptions">';
+        $texte .= '<input type="hidden" name="param1" value="DOLISIRH_TIMESHEETDOCUMENT_ADDON_PDF_ODT_PATH">';
+        $texte .= '<table class="nobordernopadding centpercent">';
+
+        // List of directories area
+        $texte .= '<tr><td>';
+        $texttitle   = $langs->trans('ListOfDirectories');
+        $listofdir   = explode(',', preg_replace('/[\r\n]+/', ',', trim($conf->global->DOLISIRH_TIMESHEETDOCUMENT_ADDON_PDF_ODT_PATH)));
+        $listoffiles = [];
+        foreach ($listofdir as $key=>$tmpdir) {
+            $tmpdir = trim($tmpdir);
+            $tmpdir = preg_replace('/DOL_DATA_ROOT/', DOL_DATA_ROOT, $tmpdir);
+            $tmpdir = preg_replace('/DOL_DOCUMENT_ROOT/', DOL_DOCUMENT_ROOT, $tmpdir);
+            if (!$tmpdir) {
+                unset($listofdir[$key]);
+                continue;
+            }
+            if (!is_dir($tmpdir)) {
+                $texttitle .= img_warning($langs->trans('ErrorDirNotFound', $tmpdir), 0);
+            } else {
+                $tmpfiles = dol_dir_list($tmpdir, 'files', 0, '\.(ods|odt)');
+                if (count($tmpfiles)) {
+                    $listoffiles = array_merge($listoffiles, $tmpfiles);
+                }
+            }
+        }
+
+        // Scan directories
+        $nbFiles = count($listoffiles);
+        if (!empty($conf->global->DOLISIRH_TIMESHEETDOCUMENT_ADDON_PDF_ODT_PATH)) {
+            $texte .= $langs->trans('NumberOfModelFilesFound') . ': <b>';
+            $texte .= count($listoffiles);
+            $texte .= '</b>';
+        }
+
+        if ($nbFiles) {
+            $texte .= '<div id="div_' . get_class($this) . '" class="hidden">';
+            foreach ($listoffiles as $file) {
+                $texte .= $file['name'] . '<br>';
+            }
+            $texte .= '</div>';
+        }
+
+        $texte .= '</td>';
+        $texte .= '</table>';
+        $texte .= '</form>';
+
+        return $texte;
+    }
+
+    /**
+     * Set tmparray vars
+     *
+     * @param  array     $tmparray  Temp array contains all document data
+     * @param  Segment   $listlines Object to fill with data to convert in ODT Segment
      * @throws Exception
      */
     public function setTmparrayVars($tmparray, $listlines) {
@@ -183,41 +172,42 @@ class doc_timesheetdocument_odt extends ModeleODTTimeSheetDocument
 
 
     /**
-     *  Function to build a document on disk using the generic odt module.
+     * Function to build a document on disk using the generic odt module.
      *
-     * @param  TimeSheetDocument $objectDocument    Object source to build document
-     * @param  Translate         $outputlangs       Lang output object
-     * @param  string            $srctemplatepath   Full path of source filename for generator using a template file
-     * @param  int               $hidedetails       Do not show line details
-     * @param  int               $hidedesc          Do not show desc
-     * @param  int               $hideref           Do not show ref
-     * @param  TimeSheet         $object            TimeSheet Object
-     * @return int                                  1 if OK, <=0 if KO
+     * @param TimesheetDocument $objectDocument  Object source to build document.
+     * @param Translate           $outputlangs     Lang output object.
+     * @param string              $srctemplatepath Full path of source filename for generator using a template file.
+     * @param int                 $hidedetails     Do not show line details.
+     * @param int                 $hidedesc        Do not show desc.
+     * @param int                 $hideref         Do not show ref.
+     * @param array               $moreparam       More param (Object/user/etc).
+     * @return        int                          1 if OK, <=0 if KO.
      * @throws Exception
      */
-	public function write_file($objectDocument, $outputlangs, $srctemplatepath, $hidedetails = 0, $hidedesc = 0, $hideref = 0, $object)
+    public function write_file(TimesheetDocument $objectDocument, Translate $outputlangs, string $srctemplatepath, int $hidedetails = 0, int $hidedesc = 0, int $hideref = 0, array $moreparam)
 	{
-		global $action, $conf, $hookmanager, $langs, $mysoc, $user;
+        global $action, $conf, $hookmanager, $langs, $mysoc;
 
-		if (empty($srctemplatepath)) {
-			dol_syslog("doc_generic_odt::write_file parameter srctemplatepath empty", LOG_WARNING);
-			return -1;
-		}
+        $object = $moreparam['object'];
 
-		// Add odtgeneration hook
-		if (!is_object($hookmanager)) {
-			include_once DOL_DOCUMENT_ROOT.'/core/class/hookmanager.class.php';
-			$hookmanager = new HookManager($this->db);
-		}
+        if (empty($srctemplatepath)) {
+            dol_syslog('doc_timesheetdocument_odt::write_file parameter srctemplatepath empty', LOG_WARNING);
+            return -1;
+        }
 
-		$hookmanager->initHooks(array('odtgeneration'));
+        // Add odtgeneration hook.
+        if (!is_object($hookmanager)) {
+            include_once DOL_DOCUMENT_ROOT . '/core/class/hookmanager.class.php';
+            $hookmanager = new HookManager($this->db);
+        }
+        $hookmanager->initHooks(['odtgeneration']);
 
-		if (!is_object($outputlangs)) {
-			$outputlangs = $langs;
-		}
+        if (!is_object($outputlangs)) {
+            $outputlangs = $langs;
+        }
 
-		$outputlangs->charset_output = 'UTF-8';
-		$outputlangs->loadLangs(array("main", "dict", "companies", "bills"));
+        $outputlangs->charset_output = 'UTF-8';
+        $outputlangs->loadLangs(['main', 'dict', 'companies', 'dolisirh@dolisirh']);
 
         $refModName          = new $conf->global->DOLISIRH_TIMESHEETDOCUMENT_ADDON($this->db);
         $objectDocumentRef   = $refModName->getNextValue($objectDocument);

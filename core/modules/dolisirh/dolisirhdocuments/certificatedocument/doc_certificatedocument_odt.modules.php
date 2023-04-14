@@ -17,7 +17,7 @@
  */
 
 /**
- * \file    htdocs/core/modules/dolisirh/dolisirhdocuments/certificatedocument/doc_certificatedocument_odt.modules.php
+ * \file    core/modules/dolisirh/dolisirhdocuments/certificatedocument/doc_certificatedocument_odt.modules.php
  * \ingroup dolisirh
  * \brief   File of class to build ODT certificate document.
  */

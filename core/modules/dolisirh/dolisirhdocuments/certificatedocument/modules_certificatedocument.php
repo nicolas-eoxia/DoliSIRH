@@ -17,7 +17,7 @@
  */
 
 /**
- * \file    core/modules/dolisirh/certificatedocument/modules_certificatedocument.php
+ * \file    core/modules/dolisirh/dolisirhdocuments/certificatedocument/modules_certificatedocument.php
  * \ingroup dolisirh
  * \brief   File that contains parent class for certificate document models.
  */
