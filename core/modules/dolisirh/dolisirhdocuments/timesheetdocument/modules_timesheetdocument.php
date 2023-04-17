@@ -28,7 +28,7 @@ require_once DOL_DOCUMENT_ROOT . '/core/class/commondocgenerator.class.php';
 /**
  * Parent class for timesheet document models.
  */
-abstract class ModeleODTCertificateDocument extends CommonDocGenerator
+abstract class ModeleODTTimesheetDocument extends CommonDocGenerator
 {
     /**
      * Return list of activated modules usable for document generation.
