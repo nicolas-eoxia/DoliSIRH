@@ -13,4 +13,9 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see https://www.gnu.org/licenses/.
 
-
+-- 1.4.0
+ALTER TABLE llx_dolisirh_object_signature ADD module_name VARCHAR(255) NULL AFTER element_type;
+UPDATE llx_dolisirh_object_signature SET module_name = 'dolisirh';
+INSERT INTO llx_saturne_object_signature (entity, date_creation, tms, import_key, status, role, firstname, lastname, email, phone, society_name, signature_date, signature_location, signature_comment, element_id, element_type, module_name, signature, stamp, last_email_sent_date, signature_url, transaction_url, object_type, fk_object)
+SELECT entity, date_creation, tms, import_key, status, role, firstname, lastname, email, phone, society_name, signature_date, signature_location, signature_comment, element_id, element_type, module_name, signature, stamp, last_email_sent_date, signature_url, transaction_url, object_type, fk_object FROM llx_dolisirh_object_signature;
+DROP TABLE llx_dolisirh_object_signature
