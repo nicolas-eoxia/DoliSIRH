@@ -1098,4 +1098,28 @@ class ActionsDoliSIRH
             $this->results = $constArray;
         }
     }
+    
+    /**
+     * Overloading the SaturneAdminDocumentData function : replacing the parent's function with the one below.
+     *
+     * @param  array $parameters Hook metadata (context, etc...)
+     * @return void
+     */
+    public function SaturneAdminDocumentData(array $parameters)
+    {
+        if ($parameters['currentcontext'] == 'dolisirhadmindocuments') {
+            $types = [
+                'TimeSheetDocument' => [
+                    'documentType' => 'timesheetdocument',
+                    'picto'        => 'fontawesome_fa-calendar-check_fas_#d35968'
+                ],
+                'CertificateDocument' => [
+                    'documentType' => 'certificatedocument',
+                    'picto'        => 'fontawesome_fa-user-graduate_fas_#d35968'
+                ]
+            ];
+
+            $this->results = $types;
+        }
+    }
 }

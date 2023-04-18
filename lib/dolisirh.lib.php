@@ -53,7 +53,7 @@ function dolisirh_admin_prepare_head(): array
     $head[$h][2] = 'certificate';
     $h++;
 
-    $head[$h][0] = dol_buildpath('/dolisirh/admin/dolisirhdocuments.php', 1);
+    $head[$h][0] = dol_buildpath('/saturne/admin/documents.php', 1) . '?module_name=DoliSIRH';
     $head[$h][1] = '<i class="fas fa-file-alt pictofixedwidth"></i>' . $langs->trans('YourDocuments');
     $head[$h][2] = 'documents';
     $h++;
