@@ -16,12 +16,12 @@
  */
 
 /**
- *   	\file       view/timesheet/timesheet_card.php
- *		\ingroup    dolisirh
- *		\brief      Page to create/edit/view timesheet
+ * \file    view/timesheet/timesheet_card.php
+ * \ingroup dolisirh
+ * \brief   Page to create/edit/view timesheet
  */
 
-// Load DoliSIRH environment
+// Load DoliSIRH environment.
 if (file_exists('../../dolisirh.main.inc.php')) {
     require_once __DIR__ . '/../../dolisirh.main.inc.php';
 } elseif (file_exists('../../../dolisirh.main.inc.php')) {
@@ -30,27 +30,29 @@ if (file_exists('../../dolisirh.main.inc.php')) {
     die('Include of dolisirh main fails');
 }
 
-// Libraries
-require_once DOL_DOCUMENT_ROOT .'/core/lib/files.lib.php';
-require_once DOL_DOCUMENT_ROOT .'/core/lib/functions2.lib.php';
-require_once DOL_DOCUMENT_ROOT .'/product/class/product.class.php';
-require_once DOL_DOCUMENT_ROOT .'/holiday/class/holiday.class.php';
+// Load Dolibarr libraries.
+require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
+require_once DOL_DOCUMENT_ROOT . '/core/lib/functions2.lib.php';
+require_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
+require_once DOL_DOCUMENT_ROOT . '/holiday/class/holiday.class.php';
 
+// Load Saturne libraries.
+require_once __DIR__ . '/../../../saturne/class/saturnesignature.class.php';
+
+// load DoliSIRH libraries.
 require_once __DIR__ . '/../../class/timesheet.class.php';
 require_once __DIR__ . '/../../class/dolisirhdocuments/timesheetdocument.class.php';
 require_once __DIR__ . '/../../class/workinghours.class.php';
 require_once __DIR__ . '/../../lib/dolisirh_timesheet.lib.php';
 require_once __DIR__ . '/../../lib/dolisirh_function.lib.php';
 
-require_once __DIR__ . '/../../../saturne/class/saturnesignature.class.php';
-
-// Global variables definitions
+// Global variables definitions.
 global $conf, $db, $hookmanager, $langs, $mysoc, $user;
 
-// Load translation files required by the page
+// Load translation files required by the page.
 saturne_load_langs();
 
-// Get parameters
+// Get parameters.
 $id                  = GETPOST('id', 'int');
 $ref                 = GETPOST('ref', 'alpha');
 $action              = GETPOST('action', 'aZ09');
@@ -64,7 +66,7 @@ $year                = (GETPOST('year', 'int') ? GETPOST('year', 'int') : date('
 $month               = (GETPOST('month', 'int') ? GETPOST('month', 'int') : date('m'));
 $day                 = (GETPOST('day', 'int') ? GETPOST('day', 'int') : date('d'));
 
-// Initialize technical objects
+// Initialize technical objects.
 $object            = new TimeSheet($db);
 $objectline        = new TimeSheetLine($db);
 $signatory         = new SaturneSignature($db);
@@ -77,35 +79,35 @@ $holiday           = new Holiday($db);
 $task              = new Task($db);
 $usertmp           = new User($db);
 
-// Initialize view objects
+// Initialize view objects.
 $form = new Form($db);
 
-$hookmanager->initHooks(['timesheetcard', 'globalcard']); // Note that conf->hooks_modules contains array
+$hookmanager->initHooks(['timesheetcard', 'globalcard']); // Note that conf->hooks_modules contains array.
 
-// Fetch optionals attributes and labels
+// Fetch optionals attributes and labels.
 $extrafields->fetch_name_optionals_label($object->table_element);
 
 $search_array_options = $extrafields->getOptionalsFromPost($object->table_element, '', 'search_');
 
-// Initialize array of search criterias
+// Initialize array of search criterias.
 $search_all = GETPOST('search_all', 'alpha');
 $search = [];
 foreach ($object->fields as $key => $val) {
-	if (GETPOST('search_'.$key, 'alpha')) {
-		$search[$key] = GETPOST('search_'.$key, 'alpha');
-	}
+    if (GETPOST('search_'.$key, 'alpha')) {
+        $search[$key] = GETPOST('search_'.$key, 'alpha');
+    }
 }
 
 if (empty($action) && empty($id) && empty($ref)) {
-	$action = 'view';
+    $action = 'view';
 }
 
-// Load object
+// Load object.
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php'; // Must be included, not include_once.
 
 $upload_dir = $conf->dolisirh->multidir_output[$object->entity ?? 1];
 
-// Security check - Protection if external user
+// Security check - Protection if external user.
 $permissiontoread   = $user->rights->dolisirh->timesheet->read;
 $permissiontoadd    = $user->rights->dolisirh->timesheet->write;
 $permissiontodelete = $user->rights->dolisirh->timesheet->delete || ($permissiontoadd && isset($object->status) && $object->status == $object::STATUS_DRAFT);
@@ -116,9 +118,9 @@ saturne_check_access($permissiontoread);
  */
 
 $parameters = [];
-$reshook = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks
+$reshook    = $hookmanager->executeHooks('doActions', $parameters, $object, $action); // Note that $action and $object may have been modified by some hooks.
 if ($reshook < 0) {
-	setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
+    setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
 }
 
 if (empty($reshook)) {
@@ -430,7 +432,7 @@ if ($action == 'create') {
 		print '<input type="hidden" name="backtopage" value="' . $backtopage . '">';
 	}
 	if ($backtopageforcancel) {
-		print '<input type="hidden" name="backtopageforcancel" value="'.$backtopageforcancel.'">';
+		print '<input type="hidden" name="backtopageforcancel" value="'. $backtopageforcancel . '">';
 	}
 
 	print dol_get_fiche_head();
@@ -509,7 +511,7 @@ if (($id || $ref) && $action == 'edit') {
 	$date_end   = dol_mktime(0, 0, 0, GETPOST('date_endmonth', 'int'), GETPOST('date_endday', 'int'), GETPOST('date_endyear', 'int'));
 
 	$_POST['date_start'] = (!empty($date_start) ? $date_start : $object->date_start);
-	$_POST['date_end'] = (!empty($date_end) ? $date_end : $object->date_end);
+	$_POST['date_end']   = (!empty($date_end) ? $date_end : $object->date_end);
 
 	$object->fields['note_public']['visible']  = 1;
 	$object->fields['note_private']['visible'] = 1;
@@ -880,23 +882,15 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		$action = 'presend';
 	}
 
-	if ($action != 'presend') {
-		print '<div class="fichecenter"><div class="fichehalfleft">';
-		print '<a name="builddoc"></a>'; // ancre
+    if ($action != 'presend') {
+        print '<div class="fichecenter"><div class="fichehalfleft">';
+        // Documents
+        $objRef    = dol_sanitizeFileName($object->ref);
+        $dirFiles  = $object->element . 'document/' . $objRef;
+        $fileDir   = $upload_dir . '/' . $dirFiles;
+        $urlSource = $_SERVER['PHP_SELF'] . '?id=' . $object->id;
 
-		$includedocgeneration = 1;
-
-		// Documents
-		if ($includedocgeneration) {
-			$objref = dol_sanitizeFileName($object->ref);
-			$dir_files = $object->element . 'document/' . $objref;
-			$filedir = $upload_dir . '/' . $dir_files;
-			$urlsource = $_SERVER['PHP_SELF']. '?id=' .$object->id;
-			$genallowed = $permissiontoadd; // If you can read, you can build the PDF to read content
-			$delallowed = $permissiontodelete; // If you can create/edit, you can remove a file on card
-
-			print doliSirhShowDocuments('dolisirh:TimeSheetDocument', $dir_files, $filedir, $urlsource, $genallowed, $object->status == $object::STATUS_LOCKED ? $delallowed : 0, $conf->global->DOLISIRH_TIMESHEETDOCUMENT_DEFAULT_MODEL, 1, 0, 0, 0, 0, '', '', '', $langs->defaultlang, $object, 0, 'removefile', $object->status == $object::STATUS_LOCKED && empty(dol_dir_list($filedir)), $langs->trans('TimeSheetMustBeLocked'));
-		}
+        print saturne_show_documents('dolisirh:' . ucfirst($object->element) . 'Document', $dirFiles, $fileDir, $urlSource, $permissiontoadd, $permissiontodelete, $conf->global->DOLISIRH_TIMESHEETDOCUMENT_DEFAULT_MODEL, 1, 0, 0, 0, 0, '', '', '', $langs->defaultlang, $object, 0, 'remove_file', $object->status == $object::STATUS_LOCKED && empty(dol_dir_list($fileDir)), $langs->trans('TimeSheetMustBeLocked'));
 
 		print '</div><div class="fichehalfright">';
 

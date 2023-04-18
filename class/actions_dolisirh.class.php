@@ -1098,7 +1098,7 @@ class ActionsDoliSIRH
             $this->results = $constArray;
         }
     }
-
+    
     /**
      * Overloading the SaturneAdminDocumentData function : replacing the parent's function with the one below.
      *
