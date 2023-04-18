@@ -1062,4 +1062,40 @@ class ActionsDoliSIRH
             return 0;
         }
     }
+
+    /**
+     * Overloading the SaturneAdminObjectConst function : replacing the parent's function with the one below.
+     *
+     * @param  array $parameters Hook metadata (context, etc...)
+     * @return void
+     */
+    public function SaturneAdminObjectConst(array $parameters)
+    {
+        if ($parameters['currentcontext'] == 'timesheetadmin') {
+            $constArray['timesheet'] = [
+                'PrefillDate' => [
+                    'name'        => 'PrefillDate',
+                    'description' => 'PrefillDateDescription',
+                    'code'        => 'DOLISIRH_TIMESHEET_PREFILL_DATE',
+                ],
+                'AddAttendantsConf' => [
+                    'name'        => 'AddAttendantsConf',
+                    'description' => 'AddAttendantsDescription',
+                    'code'        => 'DOLISIRH_TIMESHEET_ADD_ATTENDANTS',
+                ],
+                'CheckDateEnd' => [
+                    'name'        => 'CheckDateEnd',
+                    'description' => 'CheckDateEndDescription',
+                    'code'        => 'DOLISIRH_TIMESHEET_CHECK_DATE_END',
+                ],
+                'ShowTasksWithTimespentOnTimeSheet' => [
+                    'name'        => 'ShowTasksWithTimespentOnTimeSheet',
+                    'description' => 'ShowTasksWithTimespentOnTimeSheetDescription',
+                    'code'        => 'DOLISIRH_SHOW_TASKS_WITH_TIMESPENT_ON_TIMESHEET',
+                ],
+            ];
+
+            $this->results = $constArray;
+        }
+    }
 }
