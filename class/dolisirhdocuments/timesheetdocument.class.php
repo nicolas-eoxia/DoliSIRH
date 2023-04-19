@@ -21,13 +21,13 @@
  * \brief   This file is a class file for TimeSheetDocument.
  */
 
-// load DoliSIRH libraries.
-require_once __DIR__ . '/../dolisirhdocuments.class.php';
+// load Saturne libraries.
+require_once __DIR__ . '/../../../saturne/class/saturnedocuments.class.php';
 
 /**
  * Class for TimeSheetDocument.
  */
-class TimeSheetDocument extends DoliSIRHDocuments
+class TimeSheetDocument extends SaturneDocuments
 {
     /**
      * @var string Element type of object.

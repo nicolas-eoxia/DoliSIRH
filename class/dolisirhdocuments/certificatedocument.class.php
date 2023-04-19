@@ -21,13 +21,13 @@
  * \brief   This file is a class file for CertificateDocument.
  */
 
-// load DoliSIRH libraries.
-require_once __DIR__ . '/../dolisirhdocuments.class.php';
+// load Saturne libraries.
+require_once __DIR__ . '/../../../saturne/class/saturnedocuments.class.php';
 
 /**
  * Class for CertificateDocument.
  */
-class CertificateDocument extends DoliSIRHDocuments
+class CertificateDocument extends SaturneDocuments
 {
     /**
      * @var string Element type of object.
