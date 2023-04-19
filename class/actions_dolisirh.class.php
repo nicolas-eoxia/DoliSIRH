@@ -1122,7 +1122,7 @@ class ActionsDoliSIRH
             $this->results = $types;
         }
     }
-
+    
     /**
      * Overloading the SaturneIndex function : replacing the parent's function with the one below.
      *

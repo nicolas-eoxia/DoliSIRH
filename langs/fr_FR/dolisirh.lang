@@ -196,9 +196,11 @@ ErrorConfigWorkingHours = Erreur : configuration des heures de travail manquante
 GoToWorkingHours = Aller sur la page Horaires de l'utilisateur %s
 
 # Data - Donnée
+Timesheet = Navette
 TimeSheet = Navette
-NewTimeSheet = Nouvelle navette
-ModifyTimeSheet = Modifer la navette
+TheTimeSheet = la navette
+NewTimesheet = Nouvelle navette
+ModifyTimesheet = Modifer la navette
 TimeSheetList = Liste des navettes
 UserAssign = Utilisateur assigné
 PrefillDate = Préremplir la date de début et de fin de la navette
