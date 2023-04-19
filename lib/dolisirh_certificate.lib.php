@@ -33,5 +33,5 @@ require_once __DIR__ . '/../../saturne/lib/object.lib.php';
  */
 function certificate_prepare_head(Certificate $object): array
 {
-    return saturne_object_prepare_head($object, true);
+    return saturne_object_prepare_head($object);
 }
