@@ -17,6 +17,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.PAT }}
+          repository: nicolas-eoxia/DoliSIRH
           commit-message: Update report
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
