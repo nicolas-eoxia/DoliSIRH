@@ -6,24 +6,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Make changes to pull request
-        run: date +%s > report.txt
-
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v5
         with:
-          commit-message: Update report
-          committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-          branch: YESe
+          branch: YESes
           title: 'TEST'
-          body: |
-            Test
           labels: |
             bug
-          assignees: nicolas-eoxia
-          reviewers: nicolas-eoxia
+          assignees: ${{ github.actor }}
 
 
 
