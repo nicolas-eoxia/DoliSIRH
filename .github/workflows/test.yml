@@ -13,6 +13,7 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v5
         with:
+          push-to-fork: nicolas-eoxia/DoliSIRH
           commit-message: Update report
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
