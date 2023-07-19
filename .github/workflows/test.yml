@@ -16,7 +16,7 @@ jobs:
           commit-message: Update report
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-          branch: YES
+          branch: YESe
           title: 'TEST'
           body: |
             Test
