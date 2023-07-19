@@ -1,8 +1,5 @@
 name: 'Bon courage'
-on:
-  push:
-    branches:
-      - develop
+on: [push]
 jobs:
   createPullRequest:
     runs-on: ubuntu-latest
