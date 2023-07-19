@@ -1,0 +1,45 @@
+name: 'Bon courage'
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  createPullRequest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Make changes to pull request
+        run: date +%s > report.txt
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.PAT }}
+          commit-message: Update report
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          branch: example-patches
+          title: 'TEST'
+          body: |
+            Test
+          labels: |
+            bug
+          assignees: nicolas-eoxia
+          reviewers: nicolas-eoxia
+
+
+
+
+#    - name: Create Pull Request
+#        id: cpr
+#        uses: peter-evans/create-pull-request@v5
+#
+#        - name: Create or Update Project Card
+#          if: ${{ steps.cpr.outputs.pull-request-number }}
+#          uses: peter-evans/create-or-update-project-card@v2
+#          with:
+#            project-name: My project
+#            column-name: My column
+#            issue-number: ${{ steps.cpr.outputs.pull-request-number }}
