@@ -187,6 +187,8 @@ class DolisirhDashboard
         $array['type']       = 'bars';
         $array['showlegend'] = 1;
         $array['dataset']    = 2;
+        $array['options']    = 'datalabels: { color: \'' . '#FFF' . '\' }, '."\n";
+        $array['plugins']    = 'plugins: [ChartDataLabels],';
 
         $array['labels'] = [
             0 => [
@@ -238,7 +240,7 @@ class DolisirhDashboard
             $month = $langs->transnoentitiesnoconv('MonthShort'.sprintf('%02d', $i));
 			$array_key = $i - $startmonth;
 			$array_key = $array_key >= 0 ? $array_key : $array_key + 12;
-            $array['data'][$array_key] = [$month, $planned_working_time_data, $working_time_data];
+            $array['data'][$array_key] = [$month,  'y_combined_' . $langs->transnoentities('ExpectedWorkingHours') => $planned_working_time_data, 'y_combined_' . $langs->transnoentities('ConsumedWorkingHours') => $working_time_data];
         }
 		ksort($array['data']);
 
